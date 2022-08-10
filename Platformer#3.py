@@ -68,7 +68,7 @@ class Player():
                 #reset variables
                 scroll = 0
                 dx = 0
-                dy = 0
+                dy = 0#NO
 
                 #process keypresses
                 key = pygame.key.get_pressed()
@@ -81,8 +81,8 @@ class Player():
 
                 #gravity
 
-                self.vel_y += GRAVITY
-                dy += self.vel_y
+                self.vel_y += GRAVITY#NO
+                dy += self.vel_y #NO
                 # manual jump
                 self.is_jumping = True
                 self.is_falling = False
@@ -91,7 +91,14 @@ class Player():
                 def Gravity(self):
                         if (self.is_jumping):
                                 self.moveY += 3.5
-                                
+
+                def jump(self):
+                        if self.is_jumping is False:
+                                self.is_falling = False
+                                self.is_jumping = True
+                        elif self.is_jumping is True:
+                                self.is_falling = True
+                                self.is_jumping = False
 
                 #ensure player doesn't go off the edge of the screen
                 if self.rect.left + dx < 0:
@@ -103,23 +110,23 @@ class Player():
                 #check collision with platforms
                 for platform in platform_group:
                         #collision in the y direction
-                        if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+                        if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height): #NO
                                 #check if above the platform
                                 if self.rect.bottom < platform.rect.centery:
                                         if self.vel_y > 0:
                                                 self.rect.bottom = platform.rect.top
-                                                dy = 0
+                                                dy = 0#NO
                                                 self.vel_y = -20
 
                 #check if the player has bounced to the top of the screen
                 if self.rect.top <= SCROLL_THRESH:
                         #if player is jumping
                         if self.vel_y < 0:
-                                scroll = -dy
+                                scroll = -dy#NO
 
                 #update rectangle position
                 self.rect.x += dx
-                self.rect.y += dy + scroll
+                self.rect.y += dy + scroll#NO
 
                 return scroll
 
@@ -239,7 +246,8 @@ while run:
                         #create starting platform
                         platform = Platform(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT - 50, 100)
                         platform_group.add(platform)
-
+                if event.key == pygame.K_W:
+                        Player.jump()
 
         #event handler
         for event in pygame.event.get():
@@ -249,3 +257,4 @@ while run:
 
         #update display window
         pygame.display.update()
+
